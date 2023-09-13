@@ -4,14 +4,22 @@ import Header from './src/Header';
 import { getStatusBarHeight, getBottomSpace } from 'react-native-iphone-x-helper';
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context'
 import MyProfile from './src/MyProfile';
-import { myProfile } from './src/data';
+import { friendProfiles, myProfile } from './src/data';
 import Margin from './src/Margin' 
+import Division from './src/Division';
+import FriendSection from './src/FriendSection';
+import FriendList from './src/FriendList';
 
 
 const statusBarHeight = getStatusBarHeight(true);
 const bottomSpace = getBottomSpace();
 
 export default function App() {
+
+  const onPressArrow = () => {
+    console.log('click arrow!');
+  }
+
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container} edges={['left', 'right', 'top']} >
@@ -24,17 +32,29 @@ export default function App() {
           name={myProfile.name}
           introduction={myProfile.introduction}
         />
+
+        <Margin height={13} />
+
+        <Division />
+
+        <Margin height={12} />
+
+        <FriendSection friendProfileLen={friendProfiles.length}
+        onPressArrow= {onPressArrow} />
+        
+        <FriendList data={friendProfiles} />
+
       </SafeAreaView>
     </SafeAreaProvider>
     
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     // paddingTop: Platform.OS == 'android'? statusBarHeight : false,
     // paddingBottom: Platform.OS == 'ios'? bottomSpace : false,
-    backgroundColor: '#fff',
+    paddingHorizontal: 15
   },
 });
