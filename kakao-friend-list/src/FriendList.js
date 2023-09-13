@@ -4,7 +4,7 @@ import MyProfile from './MyProfile';
 import { getBottomSpace } from 'react-native-iphone-x-helper';
 import Margin from './Margin';
 
-const bottomSpace = getBottomSpace();
+// const bottomSpace = getBottomSpace();
 
 export default (props) => {
     // 1. 삼항연산자
@@ -42,7 +42,7 @@ export default (props) => {
 
     // 3. && 이용: 앞에 값이 false이면 뒤를 체크하지 않음 false return.
     return props.isOpened && (
-            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: bottomSpace }}>
+            <ScrollView showsVerticalScrollIndicator={false} >
                 {props.data.map((item, index) => (
                     <View key={index}>
                         <MyProfile

@@ -10,54 +10,60 @@ import Margin from './src/Margin'
 import Division from './src/Division';
 import FriendSection from './src/FriendSection';
 import FriendList from './src/FriendList';
+import TabBar from './src/TabBar';
 
 const statusBarHeight = getStatusBarHeight(true);
 const bottomSpace = getBottomSpace();
 
 export default function App() {
   const [isOpened, setIsOpened] = useState(true);
+  const [selectedTabIdx, setSelectedTabIdx] = useState(0);
 
   const onPressArrow = () => {
-    console.log('click arrow!');
     setIsOpened(!isOpened);
   }
 
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={styles.container} edges={['left', 'right', 'top']} >
-        <Header />
+    // <SafeAreaProvider>
+      <View style={styles.container} >
+        <View style={{ flex: 1, paddingHorizontal: 15, }} >
+          <Header />
 
-        <Margin height={10} />
+          <Margin height={10} />
 
-        <MyProfile 
-          uri={myProfile.uri}
-          name={myProfile.name}
-          introduction={myProfile.introduction}
+          <MyProfile 
+            uri={myProfile.uri}
+            name={myProfile.name}
+            introduction={myProfile.introduction}
+          />
+
+          <Margin height={13} />
+
+          <Division />
+
+          <Margin height={12} />
+
+          <FriendSection friendProfileLen={friendProfiles.length}
+          onPressArrow= {onPressArrow}
+          isOpened={isOpened} />
+          
+          <FriendList data={friendProfiles} isOpened={isOpened} />
+        </View>
+
+        <TabBar
+          selectedTabIdx={selectedTabIdx}
+          setSelectedTabIdx={setSelectedTabIdx}
         />
-
-        <Margin height={13} />
-
-        <Division />
-
-        <Margin height={12} />
-
-        <FriendSection friendProfileLen={friendProfiles.length}
-        onPressArrow= {onPressArrow}
-        isOpened={isOpened} />
-        
-        <FriendList data={friendProfiles} isOpened={isOpened} />
-
-      </SafeAreaView>
-    </SafeAreaProvider>
-    
+      </View>
+    // </SafeAreaProvider>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // paddingTop: Platform.OS == 'android'? statusBarHeight : false,
-    // paddingBottom: Platform.OS == 'ios'? bottomSpace : false,
+    paddingTop: statusBarHeight,
+    paddingBottom: Platform.OS == 'ios'? bottomSpace : false,
     paddingHorizontal: 15
   },
 });
