@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Platform } from 'react-native';
+import { StyleSheet, Text, View, Platform, FlatList } from 'react-native';
 import Header from './src/Header';
 import { getStatusBarHeight, getBottomSpace } from 'react-native-iphone-x-helper';
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context'
@@ -22,6 +22,25 @@ export default function App() {
   const onPressArrow = () => {
     setIsOpened(!isOpened);
   }
+
+  const ItemSeparatorComponent = () => <Margin height={13} /> 
+
+  // FlatList 사용
+  // return (
+  //   <View style={styles.container}>
+  //     <FlatList
+  //       data={friendProfiles}
+  //       keyExtractor={(_, index) => index}
+  //       ItemSeparatorComponent={ItemSeparatorComponent}
+  //       renderItem={(item) => (
+  //         <MyProfile
+  //           uri={item.uri}
+  //           name={item.name}
+  //           introduction={item.introduction}
+  //         />
+  //       )} />
+  //   </View>
+  // )
 
   return (
     // <SafeAreaProvider>

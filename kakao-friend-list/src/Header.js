@@ -3,10 +3,8 @@ import { Ionicons } from '@expo/vector-icons'
 
 const IconButton = (props) => {
     return (
-        <TouchableOpacity>
-            <View style={{ paddingHorizontal: 6 }}>
-                <Ionicons name={props.name} size={24} color='black' />
-            </View>  
+        <TouchableOpacity hitSlop={{ top: 10, bottom: 10 }} style={{ paddingHorizontal: 6 }}>
+            <Ionicons name={props.name} size={24} color='black' />
         </TouchableOpacity>
         
     )
