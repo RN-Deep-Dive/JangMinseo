@@ -43,8 +43,8 @@ export default function App() {
   // )
 
   return (
-    // <SafeAreaProvider>
-      <View style={styles.container} >
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.container} >
         <View style={{ flex: 1, paddingHorizontal: 15, }} >
           <Header />
 
@@ -73,16 +73,16 @@ export default function App() {
           selectedTabIdx={selectedTabIdx}
           setSelectedTabIdx={setSelectedTabIdx}
         />
-      </View>
-    // </SafeAreaProvider>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: statusBarHeight,
-    paddingBottom: Platform.OS == 'ios'? bottomSpace : false,
+    // paddingTop: statusBarHeight,
+    // paddingBottom: Platform.OS == 'ios'? bottomSpace : false,
     paddingHorizontal: 15
   },
 });
