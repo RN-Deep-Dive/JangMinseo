@@ -81,7 +81,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // paddingTop: statusBarHeight,
+    paddingTop: statusBarHeight,
     // paddingBottom: Platform.OS == 'ios'? bottomSpace : false,
     paddingHorizontal: 15
   },
