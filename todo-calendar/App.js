@@ -6,6 +6,9 @@ import { runPracticeDayjs } from './src/practice-days';
 import dayjs from 'dayjs';
 import Margin from './src/Margin';
 import {SimpleLineIcons} from '@expo/vector-icons';
+import DateTimePickerModal from 'react-native-modal-datetime-picker'
+import { useCalendar } from './src/hook/use-calendar';
+import { useTodoList } from './src/hook/use-todo-list';
 
 const columnSize = 35;
 
@@ -36,18 +39,31 @@ const Column = ({
 
 const ArrowButton = ({ iconName, onPress }) => {
   return (
-    <TouchableOpacity style={{ paddingHorizontal: 20, paddingVertical: 15 }}>
-      <SimpleLineIcons name={iconName} size={15} color='black' onPress={onPress} />
+    <TouchableOpacity onPress={onPress} style={{ paddingHorizontal: 20, paddingVertical: 15 }}>
+      <SimpleLineIcons name={iconName} size={15} color='black' />
     </TouchableOpacity>
   )
 }
 
 export default function App() {
   const now = dayjs();
+  const {
+    selectedDate,
+    setSelectedDate,
+    isDatePickerVisible,
+    showDatePicker,
+    hideDatePicker,
+    handleConfirm,
+    subtract1Month,
+    add1Month,
+  } = useCalendar(now);
 
-  const [selectedDate, setSelectedDate] = useState(now);
-  
+  const {} = useTodoList(selectedDate);
+
   const columns = getCalendarColumns(selectedDate);
+
+  const onPressLeftArrow = subtract1Month;
+  const onPressRightArrow = add1Month;
 
   const ListHeaderComponent = () => {
     const currentDateText = dayjs(selectedDate).format('YYYY.MM.DD');
@@ -55,13 +71,13 @@ export default function App() {
       <View>
         
         <View style={{ flexDirection: 'row', justifyContent:'center', alignItems: 'center' }}>
-          <ArrowButton iconName='arrow-left' onPress={() => {}} />
+          <ArrowButton iconName='arrow-left' onPress={onPressLeftArrow} />
           
-          <TouchableOpacity>
+          <TouchableOpacity onPress={showDatePicker}>
             <Text style={{ fontSize: 20, color: '#404040' }}>{currentDateText}</Text>
           </TouchableOpacity>
 
-          <ArrowButton iconName='arrow-right' onPress={() => {}} />
+          <ArrowButton iconName='arrow-right' onPress={onPressRightArrow} />
         </View>
 
       <View style={{ flexDirection: 'row' }}>
@@ -104,7 +120,7 @@ export default function App() {
   }
   
   useEffect(() => {
-    console.log('changed sd', dayjs(selectedDate).format('YYYY.MM.DD'));
+    // console.log('changed sd', dayjs(selectedDate).format('YYYY.MM.DD'));
   }, [selectedDate]);
 
   return (
@@ -116,11 +132,15 @@ export default function App() {
         numColumns={7}
         ListHeaderComponent={ListHeaderComponent}
       />
+      <DateTimePickerModal
+        isVisible={isDatePickerVisible}
+        mode="date"
+        onConfirm={handleConfirm}
+        onCancel={hideDatePicker}
+      />
     </SafeAreaView>
   );
 }
-
-
 
 const styles = StyleSheet.create({
   container: {
