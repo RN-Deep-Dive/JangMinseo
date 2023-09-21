@@ -2,9 +2,16 @@ import { useEffect, useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 import { Alert } from 'react-native';
 
+const defaultAlbum = {
+    id: 1,
+    title: '기본',
+}
+
 export const useGallery = () => {
     // custom hook은 use로 시작해야 한다 ~~~~~~
     const [images, setImages] = useState([]);
+    const [selectedAlbum, setSelctedAlbum] = useState(defaultAlbum);
+    const [albums, setAlbums] = useState([defaultAlbum]);
 
     const pickImage = async () => {
         // No permissions request is necessary for launching the image library
@@ -59,9 +66,9 @@ export const useGallery = () => {
     }, [images])
 
     return{
-        images,
         pickImage,
         deleteImage,
-        imagesWithAddButton
+        imagesWithAddButton,
+        selectedAlbum,
     };         
 }

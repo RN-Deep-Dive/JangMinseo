@@ -1,9 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Button, Image, FlatList, SafeAreaView, Platform, Dimensions, TouchableOpacity, Alert } from 'react-native';
 import { useGallery, deleteImage } from './src/use-gallery';
+import MyDropDownPicker from './src/MyDropDownPicker';
 
 export default function App() {
-  const { images, pickImage, deleteImage, imagesWithAddButton } = useGallery();
+  const { pickImage, deleteImage, imagesWithAddButton, selectedAlbum } = useGallery();
   // id: number; uri: string;
 
   const onPressOpenGallery = () => {
@@ -39,6 +40,7 @@ export default function App() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <MyDropDownPicker selectedAlbumTitle={selectedAlbum.title} />
       {/* <Button title="갤러리 열기" onPress={onPressOpenGallery} /> */}
       <FlatList
         data={imagesWithAddButton}
