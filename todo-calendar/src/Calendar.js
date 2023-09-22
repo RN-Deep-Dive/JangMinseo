@@ -2,11 +2,8 @@ import React from "react";
 import { FlatList, View, Text, TouchableOpacity } from "react-native";
 import dayjs from "dayjs";
 import { SimpleLineIcons } from '@expo/vector-icons';
-import { getStatusBarHeight } from 'react-native-iphone-x-helper';
 
 import { getDayColor, getDayText } from "./util";
-
-const statusBarHeight = getStatusBarHeight(true);
 
 const columnSize = 35;
 const Column = ({
@@ -16,6 +13,7 @@ const Column = ({
   disabled,
   onPress,
   isSelected,
+  hasTodo,
 }) => {
   return (
     <TouchableOpacity
@@ -29,7 +27,7 @@ const Column = ({
         backgroundColor: isSelected ? '#c2c2c2': 'transparent',
         borderRadius: columnSize / 2
     }}>
-      <Text style={{ color, opacity }}>{text}</Text>
+      <Text style={{ color, opacity, fontWeight: hasTodo? 'bold' : 'normal' }}>{text}</Text>
     </TouchableOpacity>
   )
 }
@@ -42,17 +40,19 @@ const ArrowButton = ({ iconName, onPress }) => {
     )
   }
 
-export default (
+export default ({ // 객체 형식으로!!!
     columns,
+    todoList,
     selectedDate,
     onPressLeftArrow,
     onPressHeaderDate,
     onPressRightArrow,
     onPressDate,
-) => {
+}) => {
 
     const ListHeaderComponent = () => {
         const currentDateText = dayjs(selectedDate).format('YYYY.MM.DD');
+        // console.log(currentDateText);
         return (
           <View>  
             <View style={{ flexDirection: 'row', justifyContent:'center', alignItems: 'center' }}>
@@ -90,7 +90,8 @@ export default (
         const isCurrentMonth = dayjs(date).isSame(selectedDate, 'month');
         const onPress = () => onPressDate(date);
         const isSelected = dayjs(date).isSame(selectedDate, 'date');
-    
+        const hasTodo = todoList.find(todo => dayjs(todo.date).isSame(dayjs(date), 'date'));
+        
         return (
           <Column
             text={dateText}
@@ -98,6 +99,7 @@ export default (
             opacity={isCurrentMonth ? 1 : 0.4}
             onPress={onPress}
             isSelected={isSelected}
+            hasTodo={hasTodo}
           />
         )
       }
@@ -110,7 +112,6 @@ export default (
             renderItem={renderItem}
             numColumns={7}
             ListHeaderComponent={ListHeaderComponent}
-            contentContainerStyle={{ paddingTop: statusBarHeight }}
       />
     )
 }
