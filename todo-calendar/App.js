@@ -16,6 +16,7 @@ import AddTodoInput from './src/AddTodoInput';
 
 export default function App() {
   const now = dayjs();
+  console.log(now);
   const {
     selectedDate,
     setSelectedDate,
@@ -144,7 +145,7 @@ export default function App() {
          }}
       />
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <>
+        <View>
           <FlatList
             ref={flatListRef}
             data={filteredTodoList}
@@ -162,7 +163,7 @@ export default function App() {
             onSubmitEditing={onSubmitEditing}
             onFocus={onFocus}
           />
-        </>
+        </View>
       </KeyboardAvoidingView>
       
       <Margin height={bottomSpace} />

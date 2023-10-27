@@ -43,6 +43,7 @@ export const getCalendarColumns = (now) => {
 //   console.log(columns);
 
   const filledColumns = fillEmptyColumns(columns, start, end);
+  console.log(filledColumns);
   return filledColumns;
 };
 
