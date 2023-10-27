@@ -1,6 +1,6 @@
-import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View, SafeAreaView } from 'react-native';
+import Calculator from './src/Calculator';
 
 export default function App() {
   const [input, setInput] = useState(0); // input
@@ -10,10 +10,9 @@ export default function App() {
   const [tempOperator, setTempOperator] = useState(null); // 저장되어있는 연산자 값
 
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaView style={styles.container}>
+      <Calculator />
+    </SafeAreaView>
   );
 }
 
