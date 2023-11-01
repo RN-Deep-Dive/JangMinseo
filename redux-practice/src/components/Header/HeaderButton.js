@@ -1,6 +1,6 @@
 import React from 'react';
 import {Button} from '../Button'
-import {Icon} from '../Icons'
+import {Icon} from '../Icon'
 
 export const HeaderIcon = (props)=>{
     return (
