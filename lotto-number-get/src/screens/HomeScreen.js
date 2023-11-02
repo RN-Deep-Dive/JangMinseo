@@ -4,31 +4,13 @@ import { View } from 'react-native';
 import { Spacer } from '../components/Spacer';
 import { Button } from '../components/Button';
 import { Typography } from '../components/Typography';
+import { LottoNumberView } from '../components/LottoNumberView';
 
 export const HomeScreen = (props) => {
     const onPressGetNumber = useCallback (()=>{
 
     }, [])
-    const getNumberBackgroundColor = useCallback(()=>{
-        const randomNumber = Math.floor((Math.random() * 10)) % 6
-        // Math.floor((Math.random() * 10)) : 한 자리수 난수 생성 
-        if(randomNumber === 0){
-            return 'red';
-        }
-        if(randomNumber === 1){
-            return 'gray';
-        }
-        if(randomNumber === 2){
-            return 'green';
-        }
-        if(randomNumber === 3){
-            return 'green';
-        }
-        if(randomNumber === 4){
-            return 'pink';
-        }
-        return 'black';
-    })
+    
   return (
     <View style={{flex:1}}>
       <Header>
@@ -43,17 +25,7 @@ export const HomeScreen = (props) => {
             backgroundColor:'white',
             borderColor:'gray'
         }}>
-            <View style={{flex:1, flexDirection:'row', alignItems:'center', justifyContent:'space-between'}}>
-                {[1,2,3,4,5,6].map((item)=>{
-                    return (
-                        <View style={{backgroundColor:getNumberBackgroundColor(), width:40, height:40, borderRadius:20, alignItems:'center', justifyContent:'center'}}>
-                            <Typography fontSize={20} color='white'>
-                                {item}
-                            </Typography>
-                        </View>
-                    )
-                })}
-            </View>
+            <LottoNumberView numbers={[1,2,3,4,5,6]}/>
         </View>
         <Spacer space={20}/>
         <Button onPress={onPressGetNumber}>
