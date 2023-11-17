@@ -98,3 +98,36 @@ export const getCoordsFromKeyword = (
       };
     });
 };
+
+export const getAddressFromCategory = (
+  category: string,
+): Promise<{address: string; addressName: string;} | null> => {
+  return fetch(
+    `https://dapi.kakao.com/v2/local/search/category.json?category\_group\_code=${category}`,
+    {
+      method: 'GET',
+      headers: {
+        Authorization: `KakaoAK ${KAKAO_API_KEY}`,
+      },
+    },
+  )
+    .then(result => result.json())
+    .then(result => {
+      console.log(result);
+
+      if (result.meta.total_count === 0) {
+        return null;
+      }
+
+      if (result.documents.length === 0) {
+        return null;
+      }
+
+      const addressItem = result.documents[0];
+
+      return {
+        address: addressItem.address_name,
+        addressName: addressItem.place_name,
+      };
+    });
+};

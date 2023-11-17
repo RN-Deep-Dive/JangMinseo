@@ -4,7 +4,7 @@ import MapView, { Marker } from "react-native-maps";
 import { Header } from "../components/Header/Header";
 import Geolocation from "@react-native-community/geolocation";
 import { SingleLineInput } from "../components/SingleLineInput";
-import { getAddressFromCoords, getCoordsFromAddress, getCoordsFromKeyword } from "../utils/GeoUtils";
+import { getAddressFromCoords, getAddressFromCategory, getCoordsFromAddress, getCoordsFromKeyword } from "../utils/GeoUtils";
 import { useRootNavigation } from "../navigation/RootNavigation";
 import { getRestrauntList } from "../utils/RealTimeDataBaseUtils";
 
@@ -18,6 +18,17 @@ export const MainScreen: React.FC = () => {
   >([]);
 
     const [query, setQuery] = useState<string>('');
+    const [category, setCategory] = useState(' '); // 아 이게 버튼 누르면 state가 다시 초기화 되나..?
+
+        useEffect(() => {
+            if (query == '카페') {
+              setCategory('CE7'.toString());
+              console.log(category);
+            } else if (query == '음식점') {
+              setCategory('FD6'.toString());
+            }
+          }, [query]);
+
     const [currentAddress, setCurrentAddress] = useState<string | null>(null);
     const [currentRegion, setCurrentRegion] = useState<{
         latitude: number;
@@ -51,6 +62,14 @@ export const MainScreen: React.FC = () => {
 
     const onFindAdress = useCallback<()=>Promise<void>>(async()=>{
         const keywordResult = await getCoordsFromKeyword(query);
+
+        console.log(category);
+        const categoryResult = await getAddressFromCategory(category);
+
+        if (categoryResult !== null) {
+            setCurrentAddress(categoryResult.address);
+            console.log(categoryResult.addressName);
+        }
 
         if (keywordResult !== null) {
 
