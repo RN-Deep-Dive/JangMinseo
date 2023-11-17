@@ -1,4 +1,4 @@
-const KAKAO_API_KEY = '';
+const KAKAO_API_KEY = 'b72b3c640f72e1ec0b4fc31845870f51';
 
 export const getAddressFromCoords = (
   latitude: number,

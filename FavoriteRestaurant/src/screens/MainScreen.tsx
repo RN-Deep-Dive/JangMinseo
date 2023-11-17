@@ -5,9 +5,18 @@ import { Header } from "../components/Header/Header";
 import Geolocation from "@react-native-community/geolocation";
 import { SingleLineInput } from "../components/SingleLineInput";
 import { getAddressFromCoords, getCoordsFromAddress, getCoordsFromKeyword } from "../utils/GeoUtils";
+import { useRootNavigation } from "../navigation/RootNavigation";
+import { getRestrauntList } from "../utils/RealTimeDataBaseUtils";
 
 export const MainScreen: React.FC = () => {
     // 37.5453577 126.9525465
+    const navigation = useRootNavigation<'Main'>();
+
+    const [isMapReady, setIsMapReady] = useState<boolean>(false);
+    const [markerList, setMarketList] = useState<
+    {latitude: number; longitude: number; title: string; address: string}[]
+  >([]);
+
     const [query, setQuery] = useState<string>('');
     const [currentAddress, setCurrentAddress] = useState<string | null>(null);
     const [currentRegion, setCurrentRegion] = useState<{
@@ -17,6 +26,17 @@ export const MainScreen: React.FC = () => {
         latitude: 126.9525465,
         longitude: 37.5453577,
     });
+
+    const onChangeLocation = useCallback<
+    (item: {latitude: number; longitude: number}) => Promise<void>
+  >(async item => {
+    setCurrentRegion({
+      latitude: item.latitude,
+      longitude: item.longitude,
+    });
+
+    getAddressFromCoords(item.latitude, item.longitude).then(setCurrentAddress);
+  }, []);
 
     const getMyLocation = useCallback(async()=>{
         Geolocation.getCurrentPosition((position)=>{
@@ -56,21 +76,29 @@ export const MainScreen: React.FC = () => {
         })
     }, [query])
 
-    // const onPressBottomAddress = useCallback(() => {
-    //     if (currentAddress === null) {
-    //       return;
-    //     }
-    //     navigation.push('Add', {
-    //       latitude: currontRegion.latitude,
-    //       longitude: currontRegion.longitude,
-    //       address: currentAddress,
-    //     });
-    //   }, [
-    //     currentAddress,
-    //     currontRegion.latitude,
-    //     currontRegion.longitude,
-    //     navigation,
-    //   ]);
+    const onPressBottomAddress = useCallback(() => {
+        console.log("눌러지니?");
+        if (currentAddress === null) {
+          return;
+        }
+
+        navigation.push('Add', {
+          latitude: currentRegion.latitude,
+          longitude: currentRegion.longitude,
+          address: currentAddress,
+        });
+      }, [
+        currentAddress,
+        currentRegion.latitude,
+        currentRegion.longitude,
+        navigation,
+      ]);
+
+      const onMapReady = useCallback(async () => {
+        setIsMapReady(true);
+        const restrauntList = await getRestrauntList();
+        setMarketList(restrauntList);
+      }, []);
 
     useEffect(()=>{
         getMyLocation();
@@ -89,35 +117,71 @@ export const MainScreen: React.FC = () => {
                 latitudeDelta: 0.015,
                 longitudeDelta: 0.0121,
               }}
+              onMapReady={onMapReady}
+              onLongPress={event => {
+                onChangeLocation(event.nativeEvent.coordinate);
+              }}
             >
-                <Marker coordinate={{
-                    latitude: currentRegion.latitude,
-                    longitude: currentRegion.longitude,
+                {isMapReady && (
+                    <Marker
+                        coordinate={{
+                        latitude: currentRegion.latitude,
+                        longitude: currentRegion.longitude,
+                        }}
+                    />
+                    )}
+                {isMapReady &&
+          markerList.map(item => {
+            return (
+              <Marker
+                title={item.title}
+                description={item.address}
+                coordinate={{
+                  latitude: item.latitude,
+                  longitude: item.longitude,
                 }}
-                />
+                pinColor="blue"
+                onCalloutPress={() => {
+                  navigation.push('Detail', {
+                    latitude: item.latitude,
+                    longitude: item.longitude,
+                    address: item.address,
+                    title: item.title,
+                  });
+                }}
+              />
+            );
+          })}
             </MapView>
 
             {currentAddress !== null && (
-        <View
-          style={{
-            position: 'absolute',
-            left: 0,
-            right: 0,
-            bottom: 24,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-            <View style={{backgroundColor:'gray', paddingHorizontal:24, paddingVertical:12, borderRadius:30}}>
-                <Text style={{fontSize: 16, color: 'white'}}>{currentAddress}</Text>
-            </View>
-        </View>
-      )}
+                <View
+                style={{
+                    position: 'absolute',
+                    left: 0,
+                    right: 0,
+                    bottom: 24,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                }}>
+                    <Pressable
+                        onPress={onPressBottomAddress}
+                        style={{
+                        backgroundColor: 'gray',
+                        paddingHorizontal: 24,
+                        paddingVertical: 12,
+                        borderRadius: 30,
+                        }}>
+                        <Text style={{fontSize: 16, color: 'white'}}>{currentAddress}</Text>
+                    </Pressable>
+                </View>
+            )}
 
             <View style={{position:'absolute', top:24, left:24, right:24,}}>
                 <View style={{backgroundColor:'white'}}>
                     <SingleLineInput 
                         value={query}
-                        placeholder="주소를 입력해 주세요 ~제발"
+                        placeholder="주소를 입력해 주세요 ~"
                         onChangeText={setQuery}
                         onSubmitEditing={onFindAdress}
                     />    
